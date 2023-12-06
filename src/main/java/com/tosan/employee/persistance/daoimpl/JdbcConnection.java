@@ -53,7 +53,10 @@ public class JdbcConnection {
 
 	public static JdbcConnection getJdbcConnection() {
 		if (jdbcConnection == null) {
-			jdbcConnection = new JdbcConnection();
+			synchronized (JdbcConnection.class) {
+				if (jdbcConnection == null)
+				jdbcConnection = new JdbcConnection();
+			}
 		}
 		return jdbcConnection;
 	}

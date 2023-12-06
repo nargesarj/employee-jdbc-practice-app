@@ -44,15 +44,16 @@ public class EmployeeServiceApp {
 	
 	public void insertDefaultEmployeeList() {
 		List<Employee> list = new ArrayList<>();
-		list.add(new Employee("John", "Johni", 1213454D, "one"));
-		list.add(new Employee("Faz", "Johni", 5111777D, "one"));
-		list.add(new Employee("Nol", "Johni", 123000D, "one"));
-		list.add(new Employee("Jack", "Johni", 999000D, "one"));
-		list.add(new Employee("Sara", "Johni", 123000D, "one"));
-		list.add(new Employee("My", "Johni", 4444444D, "one"));
-		list.add(new Employee("Why", "Johni", 123000D, "one"));
-		list.add(new Employee("Edvrd", "Johni", 4667765D, "one"));
-		list.add(new Employee("John", "Johni", 123000D, "one"));
+		list.add(new Employee("John", "Johni", 1213454D, "1"));
+		list.add(new Employee("Faz", "Johni", 5111777D, "2"));
+		list.add(new Employee("Nol", "Johni", 123000D, "2"));
+		list.add(new Employee("Jack", "Johni", 999000D, "4"));
+		list.add(new Employee("Sara", "Johni", 123000D, "5"));
+		list.add(new Employee("My", "Johni", 4444444D, "2"));
+		list.add(new Employee("Why", "Johni", 123000D, "7"));
+		list.add(new Employee("Edvrd", "Johni", 4667765D, "9"));
+		list.add(new Employee("John", "Johni", 123000D, "9"));
+		list.add(new Employee("July", "Johni", 1230440D, "10"));
 		
 		emlDao.save(list);
 	}

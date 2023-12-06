@@ -7,7 +7,7 @@ import com.tosan.employee.service.EmployeeServiceApp;
 public class MyEmployeeApp {
 
 	public static void main(String[] args) {
-		
+
 		init();
 
 		System.out.println("");
@@ -35,8 +35,8 @@ public class MyEmployeeApp {
 			System.out.println(string);
 
 	}
-	
-	public static void init( ) {
+
+	public static void init() {
 		EmployeeServiceApp employeeServiceApp = new EmployeeServiceApp();
 		employeeServiceApp.dropAllEmployees();
 		employeeServiceApp.insertDefaultEmployeeList();
