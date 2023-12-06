@@ -55,7 +55,7 @@ public class JdbcConnection {
 		if (jdbcConnection == null) {
 			synchronized (JdbcConnection.class) {
 				if (jdbcConnection == null)
-				jdbcConnection = new JdbcConnection();
+					jdbcConnection = new JdbcConnection();
 			}
 		}
 		return jdbcConnection;
