@@ -1,5 +1,6 @@
 package com.tosan.employee.persistance.daoimpl;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -64,7 +65,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	public void save(List<Employee> list) {
 		for (Employee item : list) {
 			String sql = "INSERT INTO employees (first_name, last_name, salary, department) VALUES ('"
-					+ item.getFirstName() + "', '" + item.getLastName() + "', '" + item.getSalary() + "', '" + item.getDepartment() + "');";
+					+ item.getFirstName() + "', '" + item.getLastName() + "', '" + item.getSalary() + "', '"
+					+ item.getDepartment() + "');";
 			System.out.println(sql);
 			try {
 				JdbcConnection.getJdbcConnection().statement.executeUpdate(sql);
@@ -85,4 +87,50 @@ public class EmployeeDaoImpl implements EmployeeDao {
 		}
 	}
 
+	@Override
+	public void updateSalary(Long id, Double salary) {
+		String sql = "UPDATE company.employees SET salary = " + salary + " WHERE id = " + id + " ";
+		Connection connection = JdbcConnectionPool.getConnection();
+		try {
+			connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+			connection.setAutoCommit(false);
+			connection.createStatement().executeUpdate(sql);
+			System.out.println(sql);
+			Thread.sleep(5000);
+			connection.rollback();
+			System.out.println("Update transaction is rollbacked.");
+			JdbcConnectionPool.releaseConnection(connection);
+		} catch (Exception e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				throw new RuntimeException(e);
+			}
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	@Override
+	public Employee getEmployeeById(Long id) {
+		ResultSet resultSet;
+		Employee employee = null;
+		String sql = "SELECT * FROM company.employees  WHERE id = " + id;
+		try {
+			Connection connection = JdbcConnectionPool.getConnection();
+			connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+			Thread.sleep(1);
+			resultSet = connection.createStatement().executeQuery(sql);
+			System.out.println(sql);
+			while (resultSet.next()) {
+				employee = new Employee(resultSet.getLong("id"), resultSet.getString("first_name"),
+						resultSet.getString("last_name"), resultSet.getDouble("salary"),
+						resultSet.getString("department"));
+			}
+			JdbcConnectionPool.releaseConnection(connection);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		return employee;
+	}
 }

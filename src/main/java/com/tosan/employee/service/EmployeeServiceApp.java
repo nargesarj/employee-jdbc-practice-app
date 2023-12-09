@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.tosan.employee.persistance.dao.EmployeeDao;
 import com.tosan.employee.persistance.daoimpl.EmployeeDaoImpl;
+import com.tosan.employee.persistance.daoimpl.JdbcConnection;
 import com.tosan.employee.persistance.entity.DepartmentAndAverageSalary;
 import com.tosan.employee.persistance.entity.Employee;
 
@@ -41,7 +42,7 @@ public class EmployeeServiceApp {
 		}
 		return strList;
 	}
-	
+
 	public void insertDefaultEmployeeList() {
 		List<Employee> list = new ArrayList<>();
 		list.add(new Employee("John", "Johni", 1213454D, "1"));
@@ -54,11 +55,33 @@ public class EmployeeServiceApp {
 		list.add(new Employee("Edvrd", "Johni", 4667765D, "9"));
 		list.add(new Employee("John", "Johni", 123000D, "9"));
 		list.add(new Employee("July", "Johni", 1230440D, "10"));
-		
+
 		emlDao.save(list);
 	}
-	
+
 	public void dropAllEmployees() {
 		emlDao.drop();
+	}
+
+	public void closeConnection() {
+		JdbcConnection.closeJdbcConnection();
+	}
+
+	public void testTransactionReadUncommited() throws InterruptedException {
+		Employee employee = emlDao.getEmployeeById(1L); // 1 Step
+		System.out.println(employee);
+
+		Thread thread1 = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				emlDao.updateSalary(1L, 7000D); // 2 Step
+			}
+		});
+		thread1.start();
+		Thread.sleep(100);
+
+		employee = emlDao.getEmployeeById(1L); // // 3 Step
+		System.out.println(employee);
+
 	}
 }

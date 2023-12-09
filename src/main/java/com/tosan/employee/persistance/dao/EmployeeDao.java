@@ -16,4 +16,8 @@ public interface EmployeeDao {
 	void save(List<Employee> employee);
 	
 	void drop();
+	
+	void updateSalary(Long id, Double salary);
+	
+	Employee getEmployeeById(Long id);
 }

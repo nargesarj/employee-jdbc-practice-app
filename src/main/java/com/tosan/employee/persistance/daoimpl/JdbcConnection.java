@@ -12,9 +12,9 @@ import java.util.Properties;
 public class JdbcConnection {
 
 	static {
-
+		FileInputStream fileInputStream = null;
 		try {
-			FileInputStream fileInputStream = new FileInputStream("D:\\company-config.properties");
+			fileInputStream = new FileInputStream("D:\\company-config.properties");
 			Properties properties = new Properties();
 			properties.load(fileInputStream);
 
@@ -26,6 +26,13 @@ public class JdbcConnection {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		} finally {
+			try {
+				if (fileInputStream != null)
+					fileInputStream.close();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 
@@ -59,5 +66,49 @@ public class JdbcConnection {
 			}
 		}
 		return jdbcConnection;
+	}
+	
+	private void setConnectionNull() {
+		this.connection = null;
+	}
+	
+	public static void closeJdbcConnection() {
+		try {
+			getJdbcConnection().connection.close();
+			getJdbcConnection().setConnectionNull();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public static void setTransactionIsolationLevel(int isolationLevel) {
+		try {
+			switch (isolationLevel) {
+			case Connection.TRANSACTION_NONE: {
+				getJdbcConnection().connection.setTransactionIsolation(isolationLevel);
+				break;
+			}
+			case Connection.TRANSACTION_READ_COMMITTED: {
+				getJdbcConnection().connection.setTransactionIsolation(isolationLevel);
+				break;
+			}
+			case Connection.TRANSACTION_READ_UNCOMMITTED: {
+				getJdbcConnection().connection.setTransactionIsolation(isolationLevel);
+				break;
+			}
+			case Connection.TRANSACTION_REPEATABLE_READ: {
+				getJdbcConnection().connection.setTransactionIsolation(isolationLevel);
+				break;
+			}
+			case Connection.TRANSACTION_SERIALIZABLE: {
+				getJdbcConnection().connection.setTransactionIsolation(isolationLevel);
+				break;
+			}
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + isolationLevel);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
